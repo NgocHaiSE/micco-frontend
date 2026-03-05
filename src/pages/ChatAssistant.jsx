@@ -1,8 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import {
-    Send, FileText, Sparkles,
-    Bot, Loader2
-} from 'lucide-react';
+import { FileText, Sparkles, Bot, Loader2 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { examplePrompts } from '../data/mockData';
 import Breadcrumb from '../components/shared/Breadcrumb';
