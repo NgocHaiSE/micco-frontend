@@ -1,38 +1,8 @@
 import { useState, useEffect, useRef } from 'react';
-import { FileText, HardDrive, Upload, Users, TrendingUp, Clock, Eye, Download, Trash2 } from 'lucide-react';
+import { FileText, HardDrive, Upload, Users, Clock, Eye, Download, Trash2 } from 'lucide-react';
 import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from 'recharts';
 import { useAuth } from '../context/AuthContext';
-
-function AnimatedCounter({ target, suffix = '', prefix = '' }) {
-    const [count, setCount] = useState(0);
-
-    useEffect(() => {
-        const num = typeof target === 'string' ? parseFloat(target) : target;
-        if (isNaN(num)) { setCount(0); return; }
-        const duration = 2000;
-        const steps = 60;
-        const stepTime = duration / steps;
-        let current = 0;
-
-        const timer = setInterval(() => {
-            current += num / steps;
-            if (current >= num) {
-                setCount(num);
-                clearInterval(timer);
-            } else {
-                setCount(Math.round(current * 10) / 10);
-            }
-        }, stepTime);
-
-        return () => clearInterval(timer);
-    }, [target]);
-
-    const display = typeof target === 'string' && target.includes('.')
-        ? count.toFixed(1)
-        : Math.round(count).toLocaleString();
-
-    return <span>{prefix}{display}{suffix}</span>;
-}
+import AnimatedCounter from '../components/shared/AnimatedCounter';
 
 export default function Dashboard() {
     const { authFetch } = useAuth();
@@ -74,45 +44,47 @@ export default function Dashboard() {
     const storageSuffix = stats.storageUsed.replace(/[\d.]/g, '').trim() || 'KB';
 
     const statCards = [
-        { label: 'Total Files', value: stats.totalFiles, icon: FileText, color: 'from-primary-600 to-secondary-500', suffix: '', prefix: '' },
-        { label: 'Storage Used', value: storageNum, icon: HardDrive, color: 'from-secondary-500 to-secondary-600', suffix: ` ${storageSuffix}`, prefix: '' },
-        { label: 'Recent Uploads', value: stats.recentUploads, icon: Upload, color: 'from-accent-500 to-accent-600', suffix: '', prefix: '' },
-        { label: 'Team Members', value: stats.teamMembers, icon: Users, color: 'from-amber-500 to-amber-600', suffix: '', prefix: '' },
+        { label: 'Total Files', value: stats.totalFiles, icon: FileText, color: 'from-primary-600 to-secondary-500', suffix: '', prefix: '', change: '+8%' },
+        { label: 'Storage Used', value: storageNum, icon: HardDrive, color: 'from-secondary-500 to-secondary-600', suffix: ` ${storageSuffix}`, prefix: '', change: '+5%' },
+        { label: 'Recent Uploads', value: stats.recentUploads, icon: Upload, color: 'from-accent-500 to-accent-600', suffix: '', prefix: '', change: '+12%' },
+        { label: 'Team Members', value: stats.teamMembers, icon: Users, color: 'from-amber-500 to-amber-600', suffix: '', prefix: '', change: '+3%' },
     ];
 
     return (
         <div className="space-y-8">
             {/* Page Header */}
             <div>
-                <h1 className="text-2xl lg:text-3xl font-bold text-gray-900 dark:text-white">Dashboard</h1>
-                <p className="text-gray-500 dark:text-gray-400 mt-1">Welcome back! Here's an overview of your workspace.</p>
+                <h1 className="text-xl font-bold text-gray-900 dark:text-white">Dashboard</h1>
+                <p className="text-sm text-gray-500 dark:text-gray-400 mt-0.5">Welcome back! Here's an overview of your workspace.</p>
             </div>
 
             {/* Stats Grid */}
-            <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
                 {statCards.map((stat) => {
                     const Icon = stat.icon;
                     return (
-                        <div key={stat.label} className="bg-white dark:bg-gray-900 rounded-2xl p-6 border border-gray-100 dark:border-gray-800 card-hover">
-                            <div className="flex items-center justify-between mb-4">
-                                <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${stat.color} flex items-center justify-center shadow-lg`}>
-                                    <Icon className="w-6 h-6 text-white" />
+                        <div key={stat.label} className="bg-white dark:bg-gray-900 rounded-lg p-5 border border-gray-200 dark:border-gray-800 card-hover">
+                            <div className="flex items-start justify-between mb-3">
+                                <div className={`w-9 h-9 rounded-md bg-gradient-to-br ${stat.color} flex items-center justify-center`}>
+                                    <Icon className="w-4.5 h-4.5 text-white" />
                                 </div>
-                                <TrendingUp className="w-4 h-4 text-accent-500" />
+                                <span className="text-xs font-semibold text-accent-600 dark:text-accent-400">
+                                    {stat.change} ↗
+                                </span>
                             </div>
-                            <p className="text-3xl font-extrabold text-gray-900 dark:text-white mb-1">
+                            <p className="text-sm text-gray-500 dark:text-gray-400 mb-1">{stat.label}</p>
+                            <p className="text-2xl font-bold text-gray-900 dark:text-white">
                                 <AnimatedCounter target={stat.value} suffix={stat.suffix} prefix={stat.prefix} />
                             </p>
-                            <p className="text-sm text-gray-500 dark:text-gray-400">{stat.label}</p>
                         </div>
                     );
                 })}
             </div>
 
             {/* Charts */}
-            <div className="grid lg:grid-cols-2 gap-6">
+            <div className="grid lg:grid-cols-2 gap-4">
                 {/* Uploads Over Time */}
-                <div className="bg-white dark:bg-gray-900 rounded-2xl p-6 border border-gray-100 dark:border-gray-800">
+                <div className="bg-white dark:bg-gray-900 rounded-lg p-5 border border-gray-200 dark:border-gray-800">
                     <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-6">Uploads Over Time</h3>
                     <div className="h-64">
                         <ResponsiveContainer width="100%" height="100%">
@@ -143,7 +115,7 @@ export default function Dashboard() {
                 </div>
 
                 {/* Storage by Type */}
-                <div className="bg-white dark:bg-gray-900 rounded-2xl p-6 border border-gray-100 dark:border-gray-800">
+                <div className="bg-white dark:bg-gray-900 rounded-lg p-5 border border-gray-200 dark:border-gray-800">
                     <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-6">Storage by Type</h3>
                     <div className="h-64">
                         <ResponsiveContainer width="100%" height="100%">
@@ -173,8 +145,8 @@ export default function Dashboard() {
             </div>
 
             {/* Recent Documents */}
-            <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800">
-                <div className="p-6 flex items-center justify-between border-b border-gray-100 dark:border-gray-800">
+            <div className="bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800">
+                <div className="px-5 py-4 flex items-center justify-between border-b border-gray-200 dark:border-gray-800">
                     <h3 className="text-lg font-bold text-gray-900 dark:text-white">Recent Documents</h3>
                     <button className="text-sm text-primary-600 dark:text-secondary-400 hover:underline font-medium">
                         View All
@@ -203,7 +175,7 @@ export default function Dashboard() {
                                         </div>
                                     </td>
                                     <td className="px-6 py-4 hidden sm:table-cell">
-                                        <span className="px-2.5 py-1 rounded-lg text-xs font-medium bg-primary-600/10 text-primary-600 dark:bg-primary-600/20 dark:text-primary-400">
+                                        <span className="px-2 py-0.5 rounded text-xs font-medium bg-primary-600/10 text-primary-600 dark:bg-primary-600/20 dark:text-primary-400">
                                             {doc.type}
                                         </span>
                                     </td>
