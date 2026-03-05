@@ -42,7 +42,7 @@ export function avatarColor(name = '') {
     return avatarColors[hash % avatarColors.length];
 }
 
-export const categoryLabels = {
+const categoryLabels = {
     'Tài liệu': 'Document', 'Hợp đồng': 'Contract', 'Báo cáo': 'Report',
     'Biên bản': 'Minutes', 'Quy trình': 'Process', 'Khác': 'Other',
     Report: 'Report', Spreadsheet: 'Spreadsheet',

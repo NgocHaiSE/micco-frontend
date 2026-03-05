@@ -1,5 +1,5 @@
 // src/components/document-view/DocumentInfoSidebar.jsx
-import { Info, History, ListChecks, Eye } from 'lucide-react';
+import { Info, History, ListChecks } from 'lucide-react';
 import { formatBytes, formatDate, timeAgo, getInitials, avatarColor } from '../../utils/formatters';
 
 // ── MetaRow ───────────────────────────────────────────────────────────────────
