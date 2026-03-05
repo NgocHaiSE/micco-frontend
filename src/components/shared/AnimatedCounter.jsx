@@ -3,10 +3,11 @@ import { useState, useEffect } from 'react';
 
 export default function AnimatedCounter({ target, suffix = '', prefix = '' }) {
     const [count, setCount] = useState(0);
+    const num = typeof target === 'string' ? parseFloat(target) : target;
 
     useEffect(() => {
-        const num = typeof target === 'string' ? parseFloat(target) : target;
         if (isNaN(num)) { setCount(0); return; }
+        setCount(0);
         const duration = 2000;
         const steps = 60;
         const stepTime = duration / steps;
@@ -23,9 +24,9 @@ export default function AnimatedCounter({ target, suffix = '', prefix = '' }) {
         }, stepTime);
 
         return () => clearInterval(timer);
-    }, [target]);
+    }, [num]);
 
-    const display = typeof target === 'string' && target.includes('.')
+    const display = !Number.isInteger(num)
         ? count.toFixed(1)
         : Math.round(count).toLocaleString();
 
