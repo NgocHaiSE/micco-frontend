@@ -17,6 +17,9 @@ const DEFAULT_COLOR = 'bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-s
  * data shape: { nodes: [{id, label, type}], edges: [{from, to, relation}] }
  *
  * Gated externally by `import.meta.env.DEV && msg.graph_data` in ChatMessage.jsx.
+ * Note: the static import means this module is included in the production bundle;
+ * the render path is dead-code-eliminated by Vite, but the module bytes ship.
+ * Use dynamic import if full bundle exclusion becomes a requirement.
  */
 export default function KnowledgeGraphPanel({ data }) {
     const [open, setOpen] = useState(false);
@@ -25,6 +28,7 @@ export default function KnowledgeGraphPanel({ data }) {
         <div className="mt-2 border border-indigo-200 dark:border-indigo-800 rounded-lg overflow-hidden text-xs">
             <button
                 onClick={() => setOpen(!open)}
+                aria-expanded={open}
                 className="w-full flex items-center gap-1.5 px-3 py-2 bg-indigo-50 dark:bg-indigo-900/20 text-indigo-600 dark:text-indigo-400 font-medium hover:bg-indigo-100 dark:hover:bg-indigo-900/30 transition-colors"
             >
                 {open
