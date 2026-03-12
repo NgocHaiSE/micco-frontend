@@ -17,9 +17,9 @@ const DEFAULT_COLOR = 'bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-s
  * data shape: { nodes: [{id, label, type}], edges: [{from, to, relation}] }
  *
  * Gated externally by `import.meta.env.DEV && msg.graph_data` in ChatMessage.jsx.
- * Note: the static import means this module is included in the production bundle;
- * the render path is dead-code-eliminated by Vite, but the module bytes ship.
- * Use dynamic import if full bundle exclusion becomes a requirement.
+ * Note: Vite tree-shakes the entire module from production builds because the
+ * only call site is behind `import.meta.env.DEV` (a build-time constant).
+ * Use dynamic import only if you need to verify this with bundle analysis.
  */
 export default function KnowledgeGraphPanel({ data }) {
     const [open, setOpen] = useState(false);
